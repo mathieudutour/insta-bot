@@ -8,7 +8,7 @@ api.use({
   client_secret: process.env.INSTAGRAM_CLIENT_SECRET
 })
 
-const redirect_uri = 'https://insta-exp.herokuapp.com/handleauth'
+const redirect_uri = process.env.HOST + '/handleauth'
 
 app.get('/', function (req, res) {
   res.redirect(api.get_authorization_url(redirect_uri, { scope: ['likes', 'public_content', 'follower_list', 'comments', 'relationships'], state: 'a state' }))
@@ -48,6 +48,8 @@ app.get('/handleauth', function (req, res) {
 //   .then((filename) => upload(filename, captionText))
 //   .then((res) => console.log(res))
 //   .catch((res) => console.log(res))
+
+app.set('port', process.env.PORT || 5000)
 
 app.listen(app.get('port'), () => {
   console.log('Listening on port', app.get('port'))
