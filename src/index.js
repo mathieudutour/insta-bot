@@ -11,9 +11,17 @@ api.use({
 const redirect_uri = process.env.HOST + '/handleauth'
 
 app.get('/', function (req, res) {
+  res.send('<a href="/instagram">instagram</a><a href="/twitter">twitter</a><a href="/facebook">facebook</a>')
+})
+
+app.get('/instagram', function (req, res) {
   res.redirect(api.get_authorization_url(redirect_uri, { scope: ['likes', 'public_content', 'follower_list', 'comments', 'relationships'], state: 'a state' }))
 })
-// This is your redirect URI
+
+app.get('/privacy', function (req, res) {
+  res.send('Small personal app. Won\'t collect any data in you are not one of my personal account. Feel free to hit me with any question mat.dutour[at]gmail.com')
+})
+
 app.get('/handleauth', function (req, res) {
   api.authorize_user(req.query.code, redirect_uri, function (err, result) {
     if (err) {
@@ -21,7 +29,7 @@ app.get('/handleauth', function (req, res) {
       res.send("Didn't work")
     } else {
       console.log('Yay! Access token is ' + result.access_token)
-      res.send('You made it!! ' + result.access_token)
+      res.send('You are not one of my personal account. sorry.')
     }
   })
 })
