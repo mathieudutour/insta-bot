@@ -1,6 +1,15 @@
 import fs from 'fs'
 import request from 'request'
-import {generateGuid} from './utils'
+
+function s4 () {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1)
+}
+
+export function generateGuid () {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+}
 
 export default function (url) {
   const filename = generateGuid() + '.png'
