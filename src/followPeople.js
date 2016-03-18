@@ -5,7 +5,6 @@ const {INSTAGRAM_USER, INSTAGRAM_PASSWORD} = process.env
 
 export default function (nbOfUsersToFollow) {
   return instagram.login(INSTAGRAM_USER, INSTAGRAM_PASSWORD)
-    .then((res) => JSON.parse(res).logged_in_user.pk)
     .then(instagram.getFollowing)
     .then((res) => JSON.parse(res).users.map((user) => user.pk))
     .then(asyncDeferRandom(instagram.unfollow))

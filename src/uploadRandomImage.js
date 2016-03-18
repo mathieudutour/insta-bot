@@ -16,7 +16,7 @@ const categories = [
 
 const category = categories[Math.floor(Math.random() * categories.length)]
 
-export default function (nbOfUsersToFollow) {
+export default function () {
   return downloadRandomImage(`https://source.unsplash.com/category/${category}/${dimensions}`)
     .then((filename) => upload(filename, captionText))
     .then((res) => console.log('result', res))
