@@ -1,7 +1,6 @@
 import upload from './upload'
 import downloadRandomImage from './downloadRandomImage'
-
-const captionText = ''
+import findQuote from './findQuote'
 
 const dimensions = process.env.IMAGE_DIMENSIONS || '1000x1000'
 
@@ -17,8 +16,11 @@ const categories = [
 const category = categories[Math.floor(Math.random() * categories.length)]
 
 export default function () {
-  return downloadRandomImage(`https://source.unsplash.com/category/${category}/${dimensions}`)
-    .then((filename) => upload(filename, captionText))
+  return Promise.all([
+    downloadRandomImage(`https://source.unsplash.com/category/${category}/${dimensions}`),
+    findQuote(category)
+  ])
+    .then(([filename, quote]) => upload(filename, quote))
     .then((res) => console.log('result', res))
     .catch((res) => console.log('error', res))
 }
