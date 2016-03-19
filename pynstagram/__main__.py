@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys
-import pynstagram
+from client import PynstagramClient
 from optparse import OptionParser
 
 
@@ -23,7 +23,7 @@ def main(args=None):
     if not options.file:
         parser.error('File path is required')
 
-    with pynstagram.client(options.username, options.password) as client:
+    with PynstagramClient(options.username, options.password) as client:
         text = options.caption or ''
         client.upload(options.file, text)
 

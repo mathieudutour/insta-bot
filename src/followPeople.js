@@ -10,7 +10,8 @@ export default function (nbOfUsersToFollow) {
     .then(asyncDeferRandom(instagram.unfollow))
     .then(instagram.popular)
     .then((res) => JSON.parse(res).items)
-    .then((popularMedia) => popularMedia.reduce((prev, media) => prev.concat(media.comments), []).map((comment) => comment.user_id))
+    .then((popularMedia) => popularMedia.reduce((prev, media) => prev.concat(media.comments), [])
+                                        .map((comment) => comment.user_id))
     .then((userIds) => userIds.slice(0, nbOfUsersToFollow))
     .then(asyncDeferRandom(instagram.follow))
 }

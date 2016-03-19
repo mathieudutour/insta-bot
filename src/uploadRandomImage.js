@@ -3,7 +3,7 @@ import downloadRandomImage from './downloadRandomImage'
 
 const captionText = ''
 
-const dimensions = process.env.IMAGE_DIMENSIONS || '400x400'
+const dimensions = process.env.IMAGE_DIMENSIONS || '1000x1000'
 
 const categories = [
   'buildings',
