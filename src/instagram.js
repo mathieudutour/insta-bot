@@ -96,6 +96,10 @@ export function mediaLikes (mediaId) {
   return send('get', `/media/${mediaId}/likers/`)
 }
 
+export function mediaComments (mediaId) {
+  return send('get', `/media/${mediaId}/comments/`)
+}
+
 export function user_timeline (user_id) {
   return send('get', '/feed/user/' + user_id)
 }
