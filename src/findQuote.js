@@ -14,5 +14,5 @@ export default function (category) {
     })
   })).then((res) => JSON.parse(res).tables[0].results)
      .then((quotes) => quotes[Math.floor(Math.random() * quotes.length)])
-     .then((quote) => quote.quotetext_content)
+     .then((quote) => quote.quotetext_content.replace('\'', '\\\''))
 }
