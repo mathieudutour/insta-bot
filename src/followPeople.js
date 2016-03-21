@@ -16,6 +16,7 @@ export default function (nbOfUsersToFollow) {
     .then((comments) => comments.reduce((prev, commentsArray) => prev.concat(commentsArray), []))
     .then((comments) => comments.map((comment) => comment.user))
     .then((users) => users.slice(0, nbOfUsersToFollow))
-    .then((users) => users.map((user) => user.user.pk))
+    .then((users) => users.map((user) => user.pk))
     .then(asyncDeferRandom(instagram.follow))
+    .then((followed) => `followed ${followed.length} people (${followed.filer((f) => JSON.parse(f).is_private)} private)`)
 }
