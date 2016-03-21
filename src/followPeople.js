@@ -7,6 +7,7 @@ export default function (nbOfUsersToFollow) {
   return instagram.login(INSTAGRAM_USER, INSTAGRAM_PASSWORD)
     .then(instagram.getFollowing)
     .then((res) => JSON.parse(res).users.map((user) => user.pk))
+    .then((res) => { console.log(`unfollowing ${res.length} people`); return res })
     .then(asyncDeferRandom(instagram.unfollow))
     .then(instagram.popular)
     .then((res) => JSON.parse(res).items)
@@ -18,5 +19,5 @@ export default function (nbOfUsersToFollow) {
     .then((users) => users.slice(0, nbOfUsersToFollow))
     .then((users) => users.map((user) => user.pk))
     .then(asyncDeferRandom(instagram.follow))
-    .then((followed) => `followed ${followed.length} people (${followed.filter((f) => JSON.parse(f).is_private)} private)`)
+    .then((followed) => `followed ${followed.length} people (${followed.filter((f) => JSON.parse(f).friendship_status.is_private).length} private)`)
 }
