@@ -53,6 +53,9 @@ class PynstagramSession(object):
         return media_id
 
     def configure_photo(self, media_id, caption):
+        if caption[0] is '$':
+            caption = caption[1:]
+
         data = json.dumps({
             'device_id': DEVICE_ID,
             'guid': GUID,
