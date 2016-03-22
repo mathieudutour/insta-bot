@@ -5,7 +5,7 @@ const {UUID, USER_AGENT, INSTAGRAM_SIGNATURE_KEY, INSTAGRAM_SIGNATURE_VERSION} =
 
 const URL = 'https://i.instagram.com/api/v1'
 
-function send (method, resource, data, signed) {
+function send (method, resource, data) {
   return new Promise((resolve, reject) => {
     const options = {
       url: URL + resource,
@@ -16,7 +16,7 @@ function send (method, resource, data, signed) {
       jar: true
     }
 
-    if (method.toLowerCase() !== 'get') {
+    if (method.toLowerCase() !== 'get' && data) {
       options.body = getSignedRequest(data)
     }
 
@@ -126,7 +126,7 @@ export function upload (photo) {
   return send('post', '/media/upload/', {
     device_timestamp: Math.round(Date.now() / 1000),
     photo
-  }, false)
+  })
 }
 
 export function configure (media_id, caption) {
