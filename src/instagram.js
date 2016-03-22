@@ -1,10 +1,9 @@
 import request from 'request'
 import fs from 'fs'
 
+const {UUID, USER_AGENT, INSTAGRAM_SIGNATURE_KEY, INSTAGRAM_SIGNATURE_VERSION} = process.env
+
 const URL = 'https://i.instagram.com/api/v1'
-const key = 'b4a23f5e39b5929e0666ac5de94c89d1618a2916'
-const uuid = '78791800-eb02-11e5-a03b-5cf9388caf78'
-const userAgent = 'Instagram 4.1.0 Android (11/2.4.2; 320; 720x1280; samsung; SM-N9000; SM-N9000; smdkc210; en_US)'
 
 function send (method, resource, data, signed) {
   return new Promise((resolve, reject) => {
@@ -12,7 +11,7 @@ function send (method, resource, data, signed) {
       url: URL + resource,
       method: method,
       headers: {
-        'User-Agent': userAgent
+        'User-Agent': USER_AGENT
       },
       jar: true
     }
@@ -40,7 +39,7 @@ function send (method, resource, data, signed) {
 function getSignedRequest (data) {
   const dataString = JSON.stringify(data)
   const post = {
-    'ig_sig_key_version': '4',
+    'ig_sig_key_version': INSTAGRAM_SIGNATURE_VERSION,
     'signed_body': getSignature(dataString) + '.' + dataString
   }
 
@@ -48,15 +47,15 @@ function getSignedRequest (data) {
 };
 
 function getSignature (msg) {
-  return require('crypto').createHmac('SHA256', key).update(msg).digest('hex')
+  return require('crypto').createHmac('SHA256', INSTAGRAM_SIGNATURE_KEY).update(msg).digest('hex')
 };
 
 export function login (username, password) {
   return send('post', '/accounts/login/', {
     username,
     password,
-    guid: uuid,
-    device_id: 'android-' + uuid
+    guid: UUID,
+    device_id: 'android-' + UUID
   })
 }
 

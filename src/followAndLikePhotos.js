@@ -9,4 +9,5 @@ export default function (userId) {
     .then((medias) => medias.map((media) => media.id))
     .then(asyncDeferRandom(instagram.like))
     .then(() => result)
+    .catch(() => result)
 }
