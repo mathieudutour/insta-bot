@@ -5,36 +5,37 @@ import json
 import time
 import urllib
 
-USER_AGENT = 'Instagram 4.1.0 Android (11/2.4.2; 320; 720x1280; samsung; SM-N9000; SM-N9000; smdkc210; en_US)'
-GUID = '78791800-eb02-11e5-a03b-5cf9388caf78'
-DEVICE_ID = 'android-%s' % GUID
-
 ENDPOINT_URL = 'https://i.instagram.com/api/v1'
 
-def generate_signature(data):
-    return hmac.new(
-        'b4a23f5e39b5929e0666ac5de94c89d1618a2916'.encode('utf-8'),
+def generate_payload(data, key, version):
+    sig = hmac.new(
+        key.encode('utf-8'),
         data.encode('utf-8'), hashlib.sha256).hexdigest()
+    return 'signed_body=%s.%s&ig_sig_key_version=%s' % (sig, urllib.quote(data), version)
 
 
 class PynstagramSession(object):
 
-    def __init__(self):
+    def __init__(self, USER_AGENT, UUID, INSTAGRAM_SIGNATURE_KEY, INSTAGRAM_SIGNATURE_VERSION):
         self.session = requests.Session()
+        self.USER_AGENT = USER_AGENT
+        self.UUID = UUID
+        self.INSTAGRAM_SIGNATURE_KEY = INSTAGRAM_SIGNATURE_KEY
+        self.INSTAGRAM_SIGNATURE_VERSION = INSTAGRAM_SIGNATURE_VERSION
+        self.DEVICE_ID = 'android-%s' % UUID
         self.session.headers.update({'User-Agent': USER_AGENT})
 
     def login(self, username, password):
         data = json.dumps({
-            'device_id': DEVICE_ID,
-            'guid': GUID,
+            'device_id': self.DEVICE_ID,
+            'guid': self.UUID,
             'username': username,
             'password': password,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         })
 
-        sig = generate_signature(data)
+        payload = generate_payload(data, self.INSTAGRAM_SIGNATURE_KEY, self.INSTAGRAM_SIGNATURE_VERSION)
 
-        payload = 'signed_body=%s.%s&ig_sig_key_version=4' % (sig, urllib.quote(data))
         resp = self.session.post(ENDPOINT_URL + '/accounts/login/', payload)
         resp_json = resp.json()
 
@@ -57,8 +58,8 @@ class PynstagramSession(object):
             caption = caption[1:]
 
         data = json.dumps({
-            'device_id': DEVICE_ID,
-            'guid': GUID,
+            'device_id': self.DEVICE_ID,
+            'guid': self.UUID,
             'media_id': media_id,
             'caption': caption,
             'device_timestamp': time.time(),
@@ -68,11 +69,7 @@ class PynstagramSession(object):
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         })
 
-        sig = generate_signature(data)
-
-        payload = 'signed_body={}.{}&ig_sig_key_version=4'.format(
-            sig,
-            urllib.quote(data))
+        payload = generate_payload(data, self.INSTAGRAM_SIGNATURE_KEY, self.INSTAGRAM_SIGNATURE_VERSION)
 
         resp = self.session.post(ENDPOINT_URL + '/media/configure/', payload)
         resp_json = resp.json()

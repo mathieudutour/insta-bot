@@ -2,8 +2,8 @@ from session import PynstagramSession
 
 
 class PynstagramClient(object):
-    def __init__(self, username, password):
-        self._session = PynstagramSession()
+    def __init__(self, username, password, USER_AGENT, UUID, INSTAGRAM_SIGNATURE_KEY, INSTAGRAM_SIGNATURE_VERSION):
+        self._session = PynstagramSession(USER_AGENT, UUID, INSTAGRAM_SIGNATURE_KEY, INSTAGRAM_SIGNATURE_VERSION)
         self._session.login(username, password)
 
     def __enter__(self):
