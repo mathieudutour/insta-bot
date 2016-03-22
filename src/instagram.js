@@ -100,7 +100,26 @@ export function mediaComments (mediaId) {
   return send('get', `/media/${mediaId}/comments/`)
 }
 
-export function user_timeline (user_id) {
+export function like (mediaId) {
+  return send('post', `/media/${mediaId}/like/`, {
+    media_id: mediaId
+  })
+}
+
+export function unlike (mediaId) {
+  return send('post', `/media/${mediaId}/unlike/`, {
+    media_id: mediaId
+  })
+}
+
+export function comment (mediaId, commentText) {
+  return send('post', `/media/${mediaId}/comment/`, {
+    comment_text: commentText,
+    media_id: mediaId
+  })
+}
+
+export function userTimeline (user_id) {
   return send('get', '/feed/user/' + user_id)
 }
 
